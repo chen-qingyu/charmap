@@ -1,11 +1,12 @@
 #include <QApplication>
+#include <QClipboard>
+#include <QHBoxLayout>
 #include <QHeaderView>
 #include <QLabel>
 #include <QLineEdit>
 #include <QMainWindow>
-#include <QRegularExpression>
+#include <QPushButton>
 #include <QTableWidget>
-#include <QTableWidgetItem>
 #include <QVBoxLayout>
 #include <QWidget>
 
@@ -13,8 +14,9 @@ class MainWindow : public QMainWindow
 {
 private:
     QTableWidget* table;
-    QLineEdit* search;
     QLabel* result;
+    QPushButton* btn;
+    QLineEdit* search;
 
     void initUi()
     {
@@ -34,8 +36,13 @@ private:
         result = new QLabel();
         result->setFixedHeight(30);
         result->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-        result->setFrameShape(QFrame::Box);
-        result->setTextInteractionFlags(Qt::TextSelectableByMouse);
+
+        btn = new QPushButton("Copy");
+        btn->setFixedHeight(30);
+
+        auto hlayout = new QHBoxLayout();
+        hlayout->addWidget(result);
+        hlayout->addWidget(btn);
 
         search = new QLineEdit();
         search->setFixedHeight(30);
@@ -44,7 +51,7 @@ private:
         QVBoxLayout* layout = new QVBoxLayout();
         layout->addWidget(title);
         layout->addWidget(table);
-        layout->addWidget(result);
+        layout->addLayout(hlayout);
         layout->addWidget(search);
 
         QWidget* centralWidget = new QWidget();
@@ -88,7 +95,17 @@ private:
         connect(table, &QTableWidget::itemClicked, this, [this](QTableWidgetItem* item)
                 { result->setText(item->text()); });
 
+        connect(btn, &QPushButton::clicked, this, &MainWindow::copyToClipboard);
+
         connect(search, &QLineEdit::textChanged, this, &MainWindow::updateTable);
+    }
+
+    void copyToClipboard()
+    {
+        if (!result->text().isEmpty())
+        {
+            QGuiApplication::clipboard()->setText(result->text());
+        }
     }
 
     void updateTable(const QString& text)
