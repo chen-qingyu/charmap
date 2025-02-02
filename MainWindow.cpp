@@ -34,6 +34,22 @@ void MainWindow::initUi()
     table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     table->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
+    chkUpper = new QCheckBox("Upper Case (Tab)");
+    chkUpper->setFixedHeight(30);
+
+    search = new QLineEdit();
+    search->setFixedHeight(30);
+    search->setPlaceholderText("Search...");
+    search->installEventFilter(this); // switch case
+
+    btnCopy = new QPushButton("Copy (Enter)");
+    btnCopy->setFixedHeight(30);
+
+    auto lyInput = new QHBoxLayout();
+    lyInput->addWidget(chkUpper);
+    lyInput->addWidget(search);
+    lyInput->addWidget(btnCopy);
+
     selected = nullptr;
     result = new QLabel();
     result->setFixedHeight(30);
@@ -49,27 +65,11 @@ void MainWindow::initUi()
     lyLabel->addWidget(note);
     lyLabel->addStretch();
 
-    chkUpper = new QCheckBox("Upper Case");
-    chkUpper->setFixedHeight(30);
-
-    search = new QLineEdit();
-    search->setFixedHeight(30);
-    search->setPlaceholderText("Search...");
-    search->installEventFilter(this); // switch case
-
-    btnCopy = new QPushButton("Copy");
-    btnCopy->setFixedHeight(30);
-
-    auto lyInput = new QHBoxLayout();
-    lyInput->addWidget(chkUpper);
-    lyInput->addWidget(search);
-    lyInput->addWidget(btnCopy);
-
     QVBoxLayout* layout = new QVBoxLayout();
     layout->addWidget(title);
     layout->addWidget(table);
-    layout->addLayout(lyLabel);
     layout->addLayout(lyInput);
+    layout->addLayout(lyLabel);
 
     QWidget* centralWidget = new QWidget();
     centralWidget->setLayout(layout);
@@ -145,6 +145,14 @@ void MainWindow::updateChar(Qt::CheckState state)
 
 void MainWindow::updateTable(const QString& text)
 {
+    // empty search
+    if (text.isEmpty())
+    {
+        select(nullptr);
+        return;
+    }
+
+    // filter table rows
     for (int i = 0; i < table->rowCount(); ++i)
     {
         QString desc = table->item(i, 2)->text(); // lower description
@@ -153,6 +161,8 @@ void MainWindow::updateTable(const QString& text)
                                  text == table->item(i, 1)->text() ||
                                  text == QString::number(i + 1)));
     }
+
+    // select first visible row
     for (int i = 0; i < table->rowCount(); ++i)
     {
         if (!table->isRowHidden(i))
@@ -162,6 +172,8 @@ void MainWindow::updateTable(const QString& text)
             return;
         }
     }
+
+    // no visible row
     select(nullptr);
 }
 
