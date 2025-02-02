@@ -233,6 +233,28 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event)
                     }
                 }
                 return true;
+
+            case Qt::Key_Left:
+                if (selected)
+                {
+                    int column = selected->column() - 1;
+                    if (column >= 0)
+                    {
+                        select(table->item(selected->row(), column));
+                    }
+                }
+                return true;
+
+            case Qt::Key_Right:
+                if (selected)
+                {
+                    int column = selected->column() + 1;
+                    if (column < table->columnCount())
+                    {
+                        select(table->item(selected->row(), column));
+                    }
+                }
+                return true;
         }
     }
     return QWidget::eventFilter(obj, event);
