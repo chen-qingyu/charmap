@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget* parent)
     loadLetters();
     connectSignals();
 
+    select(table->item(0, 1));
     search->setFocus();
 }
 
@@ -34,19 +35,16 @@ void MainWindow::initUi()
     table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     table->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
-    chkUpper = new QCheckBox("Upper Case (Tab)");
-    chkUpper->setFixedHeight(30);
-
+    defaultUpper = false;
     search = new QLineEdit();
     search->setFixedHeight(30);
     search->setPlaceholderText("Search...");
     search->installEventFilter(this); // switch case
 
-    btnCopy = new QPushButton("Copy (Enter)");
+    btnCopy = new QPushButton("Copy");
     btnCopy->setFixedHeight(30);
 
     auto lyInput = new QHBoxLayout();
-    lyInput->addWidget(chkUpper);
     lyInput->addWidget(search);
     lyInput->addWidget(btnCopy);
 
@@ -111,8 +109,6 @@ void MainWindow::connectSignals()
 {
     connect(table, &QTableWidget::itemClicked, this, &MainWindow::select);
 
-    connect(chkUpper, &QCheckBox::checkStateChanged, this, &MainWindow::updateChar);
-
     connect(search, &QLineEdit::textChanged, this, &MainWindow::updateTable);
     connect(search, &QLineEdit::returnPressed, this, &MainWindow::copyToClipboard);
 
@@ -134,23 +130,8 @@ void MainWindow::select(QTableWidgetItem* item)
     }
 }
 
-void MainWindow::updateChar(Qt::CheckState state)
-{
-    if (selected)
-    {
-        select(table->item(selected->row(), state == Qt::Checked ? 0 : 1));
-    }
-}
-
 void MainWindow::updateTable(const QString& text)
 {
-    // empty search
-    if (text.isEmpty())
-    {
-        select(nullptr);
-        return;
-    }
-
     // filter table rows
     for (int i = 0; i < table->rowCount(); ++i)
     {
@@ -166,7 +147,7 @@ void MainWindow::updateTable(const QString& text)
     {
         if (!table->isRowHidden(i))
         {
-            select(table->item(i, chkUpper->isChecked() ? 0 : 1));
+            select(table->item(i, defaultUpper ? 0 : 1));
             return;
         }
     }
@@ -199,7 +180,14 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event)
         switch (keyEvent->key())
         {
             case Qt::Key_Tab:
-                chkUpper->toggle();
+                defaultUpper = !defaultUpper;
+                if (selected)
+                {
+                    select(table->item(selected->row(), defaultUpper ? 0 : 1));
+                }
+                note->setText(QString("default ") + (defaultUpper ? "upper case" : "lower case"));
+                QTimer::singleShot(1000, this, [this]()
+                                   { note->clear(); });
                 return true;
 
             case Qt::Key_Up:
@@ -230,6 +218,7 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event)
                         select(table->item(row, selected->column()));
                     }
                 }
+
                 return true;
 
             case Qt::Key_Left:

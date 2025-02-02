@@ -1,7 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QCheckBox>
 #include <QLabel>
 #include <QMainWindow>
 #include <QPushButton>
@@ -15,7 +14,7 @@ private:
     QTableWidgetItem* selected;
     QLabel* result;
     QLabel* note;
-    QCheckBox* chkUpper;
+    bool defaultUpper;
     QLineEdit* search;
     QPushButton* btnCopy;
 
@@ -25,7 +24,6 @@ private:
 
 private slots:
     void select(QTableWidgetItem* item);
-    void updateChar(Qt::CheckState state);
     void updateTable(const QString& text);
     void copyToClipboard();
 
