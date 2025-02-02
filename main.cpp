@@ -127,6 +127,8 @@ public:
         initUi();
         loadLetters();
         connectSignals();
+
+        search->setFocus();
     }
 };
 
