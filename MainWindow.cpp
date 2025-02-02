@@ -122,6 +122,7 @@ void MainWindow::connectSignals()
 void MainWindow::select(QTableWidgetItem* item)
 {
     selected = item;
+    note->clear();
     if (selected)
     {
         result->setText("<h3>" + selected->text() + "</h3>");
