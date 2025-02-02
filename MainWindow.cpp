@@ -49,14 +49,15 @@ void MainWindow::initUi()
 
     selected = nullptr;
     result = new QLabel();
-    result->setFixedHeight(30);
-    result->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    result->setFixedSize(30, 30);
+    result->setAlignment(Qt::AlignCenter | Qt::AlignVCenter);
+    result->setFrameShape(QFrame::Box);
 
     timer = new QTimer();
     timer->setInterval(1000);
     note = new QLabel();
     note->setFixedHeight(30);
-    note->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    note->setAlignment(Qt::AlignCenter | Qt::AlignVCenter);
 
     auto lyLabel = new QHBoxLayout();
     lyLabel->addStretch();
@@ -88,7 +89,7 @@ void MainWindow::loadLetters()
         "ι", "κ", "λ", "μ", "ν", "ξ", "ο", "π",
         "ρ", "σ", "τ", "υ", "φ", "χ", "ψ", "ω"};
 
-    QList<QString> desc = {
+    QList<QString> descs = {
         "alpha", "beta", "gamma", "delta",
         "epsilon", "zeta", "eta", "theta",
         "iota", "kappa", "lambda", "mu",
@@ -96,13 +97,13 @@ void MainWindow::loadLetters()
         "rho", "sigma", "tau", "upsilon",
         "phi", "chi", "psi", "omega"};
 
-    table->setRowCount(desc.size());
+    table->setRowCount(descs.size());
 
-    for (int i = 0; i < desc.size(); ++i)
+    for (int i = 0; i < descs.size(); ++i)
     {
         table->setItem(i, 0, new QTableWidgetItem(uppers[i]));
         table->setItem(i, 1, new QTableWidgetItem(lowers[i]));
-        table->setItem(i, 2, new QTableWidgetItem(desc[i]));
+        table->setItem(i, 2, new QTableWidgetItem(descs[i]));
     }
 }
 
@@ -120,16 +121,19 @@ void MainWindow::connectSignals()
 
 void MainWindow::select(QTableWidgetItem* item)
 {
-    selected = item;
     note->clear();
+
+    selected = item;
     if (selected)
     {
         result->setText("<h3>" + selected->text() + "</h3>");
+        result->setFrameShape(QFrame::Box);
         table->setCurrentItem(selected);
     }
     else
     {
         result->clear();
+        result->setFrameShape(QFrame::NoFrame);
     }
 }
 
@@ -188,7 +192,7 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event)
                 {
                     select(table->item(selected->row(), defaultUpper ? 0 : 1));
                 }
-                note->setText(QString("default ") + (defaultUpper ? "upper case" : "lower case"));
+                note->setText(QString("default %1 case").arg(defaultUpper ? "upper" : "lower"));
                 timer->stop();
                 timer->start();
                 return true;
