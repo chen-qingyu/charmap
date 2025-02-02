@@ -5,6 +5,7 @@
 #include <QMainWindow>
 #include <QPushButton>
 #include <QTableWidget>
+#include <QTimer>
 
 class MainWindow : public QMainWindow
 {
@@ -13,6 +14,7 @@ private:
     QTableWidget* table;
     QTableWidgetItem* selected;
     QLabel* result;
+    QTimer* timer;
     QLabel* note;
     bool defaultUpper;
     QLineEdit* search;

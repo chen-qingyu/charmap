@@ -6,7 +6,6 @@
 #include <QHeaderView>
 #include <QKeyEvent>
 #include <QLineEdit>
-#include <QTimer>
 #include <QVBoxLayout>
 
 MainWindow::MainWindow(QWidget* parent)
@@ -53,6 +52,8 @@ void MainWindow::initUi()
     result->setFixedHeight(30);
     result->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
+    timer = new QTimer();
+    timer->setInterval(1000);
     note = new QLabel();
     note->setFixedHeight(30);
     note->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
@@ -113,6 +114,8 @@ void MainWindow::connectSignals()
     connect(search, &QLineEdit::returnPressed, this, &MainWindow::copyToClipboard);
 
     connect(btnCopy, &QPushButton::clicked, this, &MainWindow::copyToClipboard);
+
+    connect(timer, &QTimer::timeout, note, &QLabel::clear);
 }
 
 void MainWindow::select(QTableWidgetItem* item)
@@ -168,8 +171,8 @@ void MainWindow::copyToClipboard()
         note->setText("no selected char");
     }
 
-    QTimer::singleShot(1000, this, [this]()
-                       { note->clear(); });
+    timer->stop();
+    timer->start();
 }
 
 bool MainWindow::eventFilter(QObject* obj, QEvent* event)
@@ -186,8 +189,8 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event)
                     select(table->item(selected->row(), defaultUpper ? 0 : 1));
                 }
                 note->setText(QString("default ") + (defaultUpper ? "upper case" : "lower case"));
-                QTimer::singleShot(1000, this, [this]()
-                                   { note->clear(); });
+                timer->stop();
+                timer->start();
                 return true;
 
             case Qt::Key_Up:
