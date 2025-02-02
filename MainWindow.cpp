@@ -138,9 +138,7 @@ void MainWindow::updateChar(Qt::CheckState state)
 {
     if (selected)
     {
-        int row = selected->row();
-        auto item = state == Qt::Checked ? table->item(row, 0) : table->item(row, 1);
-        select(item);
+        select(table->item(selected->row(), state == Qt::Checked ? 0 : 1));
     }
 }
 
@@ -168,8 +166,7 @@ void MainWindow::updateTable(const QString& text)
     {
         if (!table->isRowHidden(i))
         {
-            auto item = chkUpper->isChecked() ? table->item(i, 0) : table->item(i, 1);
-            select(item);
+            select(table->item(i, chkUpper->isChecked() ? 0 : 1));
             return;
         }
     }
