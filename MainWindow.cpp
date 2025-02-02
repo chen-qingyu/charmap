@@ -30,7 +30,7 @@ void MainWindow::initUi()
     table->setEditTriggers(QAbstractItemView::NoEditTriggers);
     table->setSelectionMode(QAbstractItemView::SingleSelection);
     table->setHorizontalHeaderLabels({"Upper Case", "Lower Case", "Description"});
-    table->verticalHeader()->setFixedWidth(40);
+    table->verticalHeader()->setFixedWidth(30);
     table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     table->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
@@ -127,12 +127,14 @@ void MainWindow::select(QTableWidgetItem* item)
     if (selected)
     {
         result->setText("<h3>" + selected->text() + "</h3>");
+        result->setFixedSize(item->column() == 2 ? 100 : 30, 30);
         result->setFrameShape(QFrame::Box);
         table->setCurrentItem(selected);
     }
     else
     {
         result->clear();
+        result->setFixedSize(0, 30);
         result->setFrameShape(QFrame::NoFrame);
     }
 }
