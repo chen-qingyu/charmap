@@ -125,6 +125,7 @@ void MainWindow::select(QTableWidgetItem* item)
     if (selected)
     {
         result->setText("<h3>" + selected->text() + "</h3>");
+        table->setCurrentItem(selected);
     }
     else
     {
@@ -134,7 +135,7 @@ void MainWindow::select(QTableWidgetItem* item)
 
 void MainWindow::updateChar(Qt::CheckState state)
 {
-    if (selected != nullptr)
+    if (selected)
     {
         int row = selected->row();
         auto item = state == Qt::Checked ? table->item(row, 0) : table->item(row, 1);
@@ -185,10 +186,41 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event)
     if (event->type() == QEvent::KeyPress)
     {
         QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
-        if (keyEvent->key() == Qt::Key_Tab)
+        switch (keyEvent->key())
         {
-            chkUpper->toggle();
-            return true;
+            case Qt::Key_Tab:
+                chkUpper->toggle();
+                return true;
+
+            case Qt::Key_Up:
+                if (selected)
+                {
+                    int row = selected->row() - 1;
+                    while (row >= 0 && table->isRowHidden(row))
+                    {
+                        row--;
+                    }
+                    if (row >= 0)
+                    {
+                        select(table->item(row, selected->column()));
+                    }
+                }
+                return true;
+
+            case Qt::Key_Down:
+                if (selected)
+                {
+                    int row = selected->row() + 1;
+                    while (row < table->rowCount() && table->isRowHidden(row))
+                    {
+                        row++;
+                    }
+                    if (row < table->rowCount())
+                    {
+                        select(table->item(row, selected->column()));
+                    }
+                }
+                return true;
         }
     }
     return QWidget::eventFilter(obj, event);
