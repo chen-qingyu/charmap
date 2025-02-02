@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QCheckBox>
 #include <QClipboard>
 #include <QHBoxLayout>
 #include <QHeaderView>
@@ -7,6 +8,7 @@
 #include <QMainWindow>
 #include <QPushButton>
 #include <QTableWidget>
+#include <QTimer>
 #include <QVBoxLayout>
 #include <QWidget>
 
@@ -14,9 +16,14 @@ class MainWindow : public QMainWindow
 {
 private:
     QTableWidget* table;
+
+    QTableWidgetItem* selected;
     QLabel* result;
-    QPushButton* btn;
+    QLabel* note;
+
+    QCheckBox* chkUpper;
     QLineEdit* search;
+    QPushButton* btnCopy;
 
     void initUi()
     {
@@ -33,26 +40,41 @@ private:
         table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
         table->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
+        selected = nullptr;
         result = new QLabel();
         result->setFixedHeight(30);
         result->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
-        btn = new QPushButton("Copy");
-        btn->setFixedHeight(30);
+        note = new QLabel();
+        note->setFixedHeight(30);
+        note->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
-        auto hlayout = new QHBoxLayout();
-        hlayout->addWidget(result);
-        hlayout->addWidget(btn);
+        auto lyLabel = new QHBoxLayout();
+        lyLabel->addStretch();
+        lyLabel->addWidget(result);
+        lyLabel->addWidget(note);
+        lyLabel->addStretch();
+
+        chkUpper = new QCheckBox("Upper Case");
+        chkUpper->setFixedHeight(30);
 
         search = new QLineEdit();
         search->setFixedHeight(30);
         search->setPlaceholderText("Search...");
 
+        btnCopy = new QPushButton("Copy");
+        btnCopy->setFixedHeight(30);
+
+        auto lyInput = new QHBoxLayout();
+        lyInput->addWidget(chkUpper);
+        lyInput->addWidget(search);
+        lyInput->addWidget(btnCopy);
+
         QVBoxLayout* layout = new QVBoxLayout();
         layout->addWidget(title);
         layout->addWidget(table);
-        layout->addLayout(hlayout);
-        layout->addWidget(search);
+        layout->addLayout(lyLabel);
+        layout->addLayout(lyInput);
 
         QWidget* centralWidget = new QWidget();
         centralWidget->setLayout(layout);
@@ -92,19 +114,36 @@ private:
 
     void connectSignals()
     {
-        connect(table, &QTableWidget::itemClicked, this, [this](QTableWidgetItem* item)
-                { result->setText(item->text()); });
+        connect(table, &QTableWidget::itemClicked, this, &MainWindow::select);
 
-        connect(btn, &QPushButton::clicked, this, &MainWindow::copyToClipboard);
+        connect(chkUpper, &QCheckBox::checkStateChanged, this, &MainWindow::updateChar);
 
         connect(search, &QLineEdit::textChanged, this, &MainWindow::updateTable);
+        connect(search, &QLineEdit::returnPressed, this, &MainWindow::copyToClipboard);
+
+        connect(btnCopy, &QPushButton::clicked, this, &MainWindow::copyToClipboard);
     }
 
-    void copyToClipboard()
+    void select(QTableWidgetItem* item)
     {
-        if (!result->text().isEmpty())
+        selected = item;
+        if (selected)
         {
-            QGuiApplication::clipboard()->setText(result->text());
+            result->setText("<h3>" + selected->text() + "</h3>");
+        }
+        else
+        {
+            result->clear();
+        }
+    }
+
+    void updateChar(Qt::CheckState state)
+    {
+        if (selected != nullptr)
+        {
+            int row = selected->row();
+            auto item = state == Qt::Checked ? table->item(row, 0) : table->item(row, 1);
+            select(item);
         }
     }
 
@@ -118,6 +157,32 @@ private:
                                      text == table->item(i, 1)->text() ||
                                      text == QString::number(i + 1)));
         }
+        for (int i = 0; i < table->rowCount(); ++i)
+        {
+            if (!table->isRowHidden(i))
+            {
+                auto item = chkUpper->isChecked() ? table->item(i, 0) : table->item(i, 1);
+                select(item);
+                return;
+            }
+        }
+        select(nullptr);
+    }
+
+    void copyToClipboard()
+    {
+        if (selected)
+        {
+            QGuiApplication::clipboard()->setText(selected->text());
+            note->setText("copied!");
+        }
+        else
+        {
+            note->setText("no selected char.");
+        }
+
+        QTimer::singleShot(1000, this, [this]()
+                           { note->clear(); });
     }
 
 public:
