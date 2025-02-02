@@ -6,7 +6,9 @@ add_cxxflags("/utf-8")
 
 target("greekchar")
     add_rules("qt.widgetapp")
-    add_files("main.cpp")
+    add_files("*.cpp")
+    add_files("*.h")
+
 
 includes("@builtin/xpack")
 xpack("greekchar")
