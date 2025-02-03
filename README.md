@@ -10,17 +10,17 @@ GreekChar is a simple application that provides a quick lookup table for Greek a
 
 There are two major operations:
 
-1. **Using Keyboard (Efficient):**
+- **Using Keyboard (Efficient):**
 
-   - Type in the search bar to filter letters.
-   - Press Enter to copy the selected letter to the clipboard.
-   - Use arrow keys to navigate.
-   - Use Tab to switch between upper and lower case.
+  1. Type in the search bar to filter letters.
+  2. Press Enter to copy the selected letter to the clipboard.
+  3. Use arrow keys to navigate.
+  4. Use Tab to switch between upper and lower case.
 
-2. **Using Mouse (Easy):**
+- **Using Mouse (Easy):**
 
-   - Click on a letter in the table to select a letter.
-   - Press the "Copy" button to copy the selected letter to the clipboard.
+  1. Click a letter in the table to select it.
+  2. Click the "Copy" button to copy the selected letter to the clipboard.
 
 ## License
 
