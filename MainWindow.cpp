@@ -177,7 +177,6 @@ void MainWindow::copyToClipboard()
         note->setText("no selected char");
     }
 
-    timer->stop();
     timer->start();
 }
 
@@ -195,7 +194,6 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event)
                     select(table->item(selected->row(), defaultUpper ? 0 : 1));
                 }
                 note->setText(QString("default %1 case").arg(defaultUpper ? "upper" : "lower"));
-                timer->stop();
                 timer->start();
                 return true;
 
