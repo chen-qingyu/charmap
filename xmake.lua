@@ -4,7 +4,7 @@ set_license("MIT")
 local title = "Charmap"
 local desc = "A quick Unicode characters lookup table."
 local author = "ChenQingYu"
-local version = "0.5.0"
+local version = "0.5.1"
 local url = "https://github.com/chen-qingyu/charmap"
 
 set_configvar("title", title)

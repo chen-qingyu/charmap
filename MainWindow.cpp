@@ -45,12 +45,13 @@ void MainWindow::initUi()
     table->verticalHeader()->setFixedWidth(30);
     table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     table->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    table->installEventFilter(this);
 
     defaultUpper = false;
     search = new QLineEdit();
     search->setFixedHeight(30);
     search->setPlaceholderText("Search...");
-    search->installEventFilter(this); // switch case
+    search->installEventFilter(this);
 
     btnCopy = new QPushButton("Copy");
     btnCopy->setFixedHeight(30);
@@ -124,10 +125,7 @@ void MainWindow::connectSignals()
     connect(actAbout, &QAction::triggered, this, &MainWindow::showAbout);
 
     connect(table, &QTableWidget::itemClicked, this, &MainWindow::select);
-
     connect(search, &QLineEdit::textChanged, this, &MainWindow::updateTable);
-    connect(search, &QLineEdit::returnPressed, this, &MainWindow::copyToClipboard);
-
     connect(btnCopy, &QPushButton::clicked, this, &MainWindow::copyToClipboard);
 
     connect(timer, &QTimer::timeout, note, &QLabel::clear);
@@ -227,6 +225,10 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event)
         QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
         switch (keyEvent->key())
         {
+            case Qt::Key_Return:
+                copyToClipboard();
+                return true;
+
             case Qt::Key_Tab:
                 defaultUpper = !defaultUpper;
                 if (selected)
