@@ -1,0 +1,5 @@
+#define TITLE "${title}"
+#define DESC "${desc}"
+#define AUTHOR "${author}"
+#define VERSION "${version}"
+#define URL "${url}"

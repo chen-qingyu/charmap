@@ -215,7 +215,9 @@ void MainWindow::showUsage()
 
 void MainWindow::showAbout()
 {
-    QMessageBox::about(this, "About", QString("<h2>%1</h2><i>%2</i><p>version: %3</p><a href='%4'>%4</a>").arg(TITLE, DESC, VERSION, URL));
+    QMessageBox::about(this, "About",
+                       QString("<h2>%1</h2><i>%2</i><p>Author: %3</p><p>Version: %4</p><a href='%5'>%5</a>")
+                           .arg(TITLE, DESC, AUTHOR, VERSION, URL));
 }
 
 bool MainWindow::eventFilter(QObject* obj, QEvent* event)

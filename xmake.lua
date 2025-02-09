@@ -1,21 +1,37 @@
 set_project("charmap")
-set_version("0.5.0")
 set_license("MIT")
-add_rules("mode.debug", "mode.release")
-add_cxxflags("/utf-8")
+
+local title = "Charmap"
+local desc = "A quick Unicode characters lookup table."
+local author = "ChenQingYu"
+local version = "0.5.0"
+local url = "https://github.com/chen-qingyu/charmap"
+
+set_configvar("title", title)
+set_configvar("desc", desc)
+set_configvar("author", author)
+set_configvar("version", version)
+set_configvar("url", url)
+set_configdir("$(buildir)/info")
+add_includedirs("$(buildir)/info")
+add_configfiles("info.h.in")
 
 target("charmap")
+    set_version(version)
+    add_rules("mode.debug", "mode.release")
     add_rules("qt.widgetapp")
     add_files("*.cpp")
     add_files("*.h")
+    add_cxxflags("/utf-8")
 
 includes("@builtin/xpack")
 xpack("charmap")
     set_formats("zip")
-    set_title("Charmap")
-    set_author("ChenQingYu")
-    set_description("A quick Unicode characters lookup table.")
-    set_homepage("https://github.com/chen-qingyu/charmap")
+    set_title(title)
+    set_description(desc)
+    set_author(author)
+    set_version(version)
+    set_homepage(url)
     set_bindir("/")
     add_targets("charmap")
     add_installfiles("README.md")
