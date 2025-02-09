@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QAction>
 #include <QLabel>
 #include <QMainWindow>
 #include <QPushButton>
@@ -11,6 +12,8 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 private:
+    QAction* actUsage;
+    QAction* actAbout;
     QTableWidget* table;
     QTableWidgetItem* selected;
     QLabel* result;
@@ -28,6 +31,9 @@ private slots:
     void select(QTableWidgetItem* item);
     void updateTable(const QString& text);
     void copyToClipboard();
+
+    void showUsage();
+    void showAbout();
 
 protected:
     bool eventFilter(QObject* obj, QEvent* event) override;

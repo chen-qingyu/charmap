@@ -6,6 +6,8 @@
 #include <QHeaderView>
 #include <QKeyEvent>
 #include <QLineEdit>
+#include <QMenuBar>
+#include <QMessageBox>
 #include <QVBoxLayout>
 
 MainWindow::MainWindow(QWidget* parent)
@@ -21,9 +23,19 @@ MainWindow::MainWindow(QWidget* parent)
 
 void MainWindow::initUi()
 {
-    auto title = new QLabel();
-    title->setText("<h2>GreekChar</h2><i>A quick Greek alphabet lookup table.</i>");
-    title->setAlignment(Qt::AlignCenter);
+    actUsage = new QAction("Usage(&U)");
+    actUsage->setStatusTip("Usage...");
+
+    actAbout = new QAction("About(&A)");
+    actAbout->setStatusTip("About...");
+
+    QMenu* menuHelp = new QMenu("Help(&H)");
+    menuHelp->addAction(actUsage);
+    menuHelp->addAction(actAbout);
+
+    QMenuBar* menu = new QMenuBar();
+    menu->addMenu(menuHelp);
+    this->setMenuBar(menu);
 
     table = new QTableWidget();
     table->setColumnCount(3);
@@ -66,7 +78,6 @@ void MainWindow::initUi()
     lyLabel->addStretch();
 
     QVBoxLayout* layout = new QVBoxLayout();
-    layout->addWidget(title);
     layout->addWidget(table);
     layout->addLayout(lyInput);
     layout->addLayout(lyLabel);
@@ -109,6 +120,9 @@ void MainWindow::loadChars()
 
 void MainWindow::connectSignals()
 {
+    connect(actUsage, &QAction::triggered, this, &MainWindow::showUsage);
+    connect(actAbout, &QAction::triggered, this, &MainWindow::showAbout);
+
     connect(table, &QTableWidget::itemClicked, this, &MainWindow::select);
 
     connect(search, &QLineEdit::textChanged, this, &MainWindow::updateTable);
@@ -178,6 +192,34 @@ void MainWindow::copyToClipboard()
     }
 
     timer->start();
+}
+
+void MainWindow::showUsage()
+{
+    QString msg = R"(
+- **Using Keyboard (Efficient):**
+
+  1. Type in the search bar to filter characters.
+  2. Press Enter to copy the selected character to the clipboard.
+  3. Use arrow keys to navigate.
+  4. Use Tab to switch between upper and lower case if character case exists.
+
+- **Using Mouse (Easy):**
+
+  1. Click a character in the table to select it.
+  2. Click the "Copy" button to copy the selected character to the clipboard.
+)";
+
+    QMessageBox::about(this, "Usage", msg);
+}
+
+void MainWindow::showAbout()
+{
+    QString title = "Charmap";
+    QString desc = "A quick Unicode characters lookup table.";
+    QString version = "0.5.0";
+    QString url = "https://github.com/chen-qingyu/charmap";
+    QMessageBox::about(this, "About", QString("<h2>%1</h2><i>%2</i><p>version: %3</p><a href='%4'>%4</a>").arg(title, desc, version, url));
 }
 
 bool MainWindow::eventFilter(QObject* obj, QEvent* event)

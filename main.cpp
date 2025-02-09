@@ -7,7 +7,7 @@ int main(int argc, char* argv[])
     QApplication app(argc, argv);
 
     MainWindow window;
-    window.setWindowTitle("GreekChar");
+    window.setWindowTitle("Charmap");
     window.show();
 
     return app.exec();
