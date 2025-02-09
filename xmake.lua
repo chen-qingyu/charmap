@@ -1,5 +1,5 @@
 set_project("charmap")
-set_version("0.4.0")
+set_version("0.5.0")
 set_license("MIT")
 add_rules("mode.debug", "mode.release")
 add_cxxflags("/utf-8")
@@ -8,7 +8,6 @@ target("charmap")
     add_rules("qt.widgetapp")
     add_files("*.cpp")
     add_files("*.h")
-
 
 includes("@builtin/xpack")
 xpack("charmap")

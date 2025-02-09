@@ -215,11 +215,7 @@ void MainWindow::showUsage()
 
 void MainWindow::showAbout()
 {
-    QString title = "Charmap";
-    QString desc = "A quick Unicode characters lookup table.";
-    QString version = "0.5.0";
-    QString url = "https://github.com/chen-qingyu/charmap";
-    QMessageBox::about(this, "About", QString("<h2>%1</h2><i>%2</i><p>version: %3</p><a href='%4'>%4</a>").arg(title, desc, version, url));
+    QMessageBox::about(this, "About", QString("<h2>%1</h2><i>%2</i><p>version: %3</p><a href='%4'>%4</a>").arg(TITLE, DESC, VERSION, URL));
 }
 
 bool MainWindow::eventFilter(QObject* obj, QEvent* event)

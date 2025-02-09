@@ -8,6 +8,8 @@
 #include <QTableWidget>
 #include <QTimer>
 
+#include "defs.h"
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT

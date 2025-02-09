@@ -7,7 +7,7 @@ int main(int argc, char* argv[])
     QApplication app(argc, argv);
 
     MainWindow window;
-    window.setWindowTitle("Charmap");
+    window.setWindowTitle(TITLE);
     window.show();
 
     return app.exec();
