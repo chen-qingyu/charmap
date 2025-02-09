@@ -225,7 +225,8 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event)
         QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
         switch (keyEvent->key())
         {
-            case Qt::Key_Return:
+            case Qt::Key_Return: // main enter
+            case Qt::Key_Enter:  // num enter
                 copyToClipboard();
                 return true;
 
