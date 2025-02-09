@@ -1,17 +1,17 @@
 set_project("charmap")
 set_license("MIT")
 
-local title = "Charmap"
-local desc = "A quick Unicode characters lookup table."
-local author = "ChenQingYu"
-local version = "0.5.1"
-local url = "https://github.com/chen-qingyu/charmap"
+local info = {
+    title = "Charmap",
+    desc = "A quick Unicode characters lookup table.",
+    author = "ChenQingYu",
+    version = "0.5.1",
+    url = "https://github.com/chen-qingyu/charmap"
+}
 
-set_configvar("title", title)
-set_configvar("desc", desc)
-set_configvar("author", author)
-set_configvar("version", version)
-set_configvar("url", url)
+for k, v in pairs(info) do
+    set_configvar(k, v)
+end
 set_configdir("$(buildir)/info")
 add_includedirs("$(buildir)/info")
 add_configfiles("info.h.in")
