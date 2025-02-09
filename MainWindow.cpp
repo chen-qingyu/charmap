@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
 {
     initUi();
-    loadLetters();
+    loadChars();
     connectSignals();
 
     select(table->item(0, 1));
@@ -77,7 +77,7 @@ void MainWindow::initUi()
     this->resize(400, 300);
 }
 
-void MainWindow::loadLetters()
+void MainWindow::loadChars()
 {
     QList<QString> uppers = {
         "Α", "Β", "Γ", "Δ", "Ε", "Ζ", "Η", "Θ",

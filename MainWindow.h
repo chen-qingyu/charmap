@@ -21,7 +21,7 @@ private:
     QPushButton* btnCopy;
 
     void initUi();
-    void loadLetters();
+    void loadChars();
     void connectSignals();
 
 private slots:
