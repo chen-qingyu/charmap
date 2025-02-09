@@ -268,7 +268,6 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event)
                         select(table->item(row, selected->column()));
                     }
                 }
-
                 return true;
 
             case Qt::Key_Left:
@@ -294,5 +293,6 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event)
                 return true;
         }
     }
+
     return QWidget::eventFilter(obj, event);
 }
